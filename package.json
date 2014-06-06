@@ -1,0 +1,14 @@
+{
+  "name": "QuitusMario",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jigar",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "express": "~4.4.0",
+    "browserify": "~4.1.8"
+  }
+}
