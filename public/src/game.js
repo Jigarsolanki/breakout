@@ -23,62 +23,46 @@ Q.animations('coin', {
   shine: { frames: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], rate: 1/10 }
 });
 
-require(['./src/player', './src/boss', './src/mashroom', './src/princess', './src/coin'], function (Player, Boss, Mashroom, Princess, Coin) {
-  Q.Sprite.extend("Enemy",{
-    init: function(p) {
-      this._super(p, { sheet: 'enemy', vx: 100 });
-      this.add('2d, aiBounce');
+Q.animations('goomba', {
+  walk: { frames: [0, 1], rate: 1/2 }
+});
 
-      this.on("bump.left,bump.right,bump.bottom",function(collision) {
-        if(collision.obj.isA("Player")) {
-          Q.audio.play('/sounds/mario_die.wav');
-          Q.stageScene("endGame",1, { label: "You Died" });
-          collision.obj.destroy();
-        }
-      });
-
-      this.on("bump.top",function(collision) {
-        if(collision.obj.isA("Player")) {
-          this.destroy();
-          collision.obj.p.vy = -300;
-        }
-      });
-    }
-  });
-
-  Q.scene("level1",function(stage) {
-    stage.insert(new Q.Repeater({ asset: "/images/background.png", speedX: 0.5, speedY: 0.5, scale: 1 }));
+require(['./src/player', './src/goomba', './src/boss', './src/mashroom', './src/princess', './src/coin'], function (Player, Boss, Mashroom, Princess, Coin) {
+  Q.scene('level1',function(stage) {
+    stage.insert(new Q.Repeater({ asset: '/images/background.png', speedX: 0.5, speedY: 0.5, scale: 1 }));
     stage.collisionLayer(new Q.TileLayer({ dataAsset: '/level.json', sheet: 'tiles' }));
-    var player = stage.insert(new Q.Player({ x: 400, y: 0 }));
-    // var boss = stage.insert(new Q.Boss({ x: 150, y: 70 }));
-    var mashroom = stage.insert(new Q.Mashroom({ x: 250, y: 150 }))
 
-    stage.add("viewport").follow(player);
+    stage.insert(new Q.Player({ x: 50, y: 560 }));
 
-    stage.insert(new Q.Enemy({ x: 700, y: 0 }));
-    stage.insert(new Q.Enemy({ x: 800, y: 0 }));
-    stage.insert(new Q.Enemy({ x: 700, y: 100 }));
+    stage.add('viewport');
 
-    stage.insert(new Q.Princess({ x: 40, y: 0 }));
+    // stage.insert(new Q.Goomba({ x: 50, y: 0 }));
+    // stage.insert(new Q.Goomba({ x: 80, y: 0 }));
+    // stage.insert(new Q.Goomba({ x: 75, y: 0 }));
+    // stage.insert(new Q.Boss({ x: 150, y: 70 }));
 
-    stage.insert(new Q.Coin({ x: 70, y: 190 }));
-    stage.insert(new Q.Coin({ x: 100, y: 190 }));
-    stage.insert(new Q.Coin({ x: 130, y: 190 }));
+    // stage.insert(new Q.Princess({ x: 40, y: 0 }));
+
+    stage.insert(new Q.Coin({ x: 300, y: 505 }));
+    stage.insert(new Q.Coin({ x: 330, y: 505 }));
+    stage.insert(new Q.Coin({ x: 360, y: 505 }));
     stage.insert(new Q.Coin({ x: 160, y: 190 }));
     stage.insert(new Q.Coin({ x: 190, y: 190 }));
     stage.insert(new Q.Coin({ x: 220, y: 190 }));
     stage.insert(new Q.Coin({ x: 250, y: 190 }));
+
+    stage.insert(new Q.Mashroom({ x: 495, y: 250 }))
   });
 
   Q.scene('endGame',function(stage) {
     var box = stage.insert(new Q.UI.Container({
-      x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0.5)"
+      x: Q.width/2, y: Q.height/2, fill: 'rgba(0,0,0,0.5)'
     }));
 
-    var button = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC", label: "Play Again" }))
+    var button = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: '#CCCCCC', label: 'Play Again' }))
     var label = box.insert(new Q.UI.Text({x:10, y: -10 - button.p.h,
                                           label: stage.options.label }));
-    button.on("click",function() {
+    button.on('click',function() {
       Q.clearStages();
       Q.stageScene('level1');
     });
@@ -94,7 +78,7 @@ require(['./src/player', './src/boss', './src/mashroom', './src/princess', './sr
     '/level.json',
     '/images/tiles.png',
     '/images/princess.gif',
-    '/images/goomba.gif',
+    '/images/goomba.png',
     '/images/boss.png',
     '/images/mario1.png',
     '/images/mario_fireball.gif',
@@ -103,19 +87,21 @@ require(['./src/player', './src/boss', './src/mashroom', './src/princess', './sr
     '/sounds/fireball.wav',
     '/sounds/boss_fireball.wav',
     '/sounds/mario_die.wav',
+    '/sounds/powerup.wav',
+    '/sounds/world_clear.wav',
     '/sounds/coin.wav'
   ];
 
   Q.load(images.join(',') , function() {
-    Q.sheet("tiles","/images/tiles.png", { tilew: 32, tileh: 32 });
-    Q.sheet("player", "/images/mario1.png", { tilew: 25, tileh: 32 });
-    Q.sheet("princess", "/images/princess.gif", { tilew: 24, tileh: 44 });
-    Q.sheet("boss", "/images/boss.png", { tilew: 51 , tileh: 46 });
-    Q.sheet("enemy", "/images/goomba.gif", { tilew: 32, tileh: 32 });
-    Q.sheet("mashroom", "/images/mashroom.png", { tilew: 483, tileh: 480 });
-    Q.sheet("fireball", "/images/mario_fireball.gif", { tilew: 20, tileh: 20 });
-    Q.sheet("bossfire", "/images/boss_fireball.gif", { tilew: 48, tileh: 16 });
-    Q.sheet("coin", "/images/coin.png", { tilew: 32, tileh: 32 });
-    Q.stageScene("level1");
+    Q.sheet('tiles','/images/tiles.png', { tilew: 32, tileh: 32 });
+    Q.sheet('player', '/images/mario1.png', { tilew: 25, tileh: 32 });
+    Q.sheet('princess', '/images/princess.gif', { tilew: 24, tileh: 44 });
+    Q.sheet('boss', '/images/boss.png', { tilew: 51 , tileh: 46 });
+    Q.sheet('goomba', '/images/goomba.png', { tilew: 206, tileh: 206 });
+    Q.sheet('mashroom', '/images/mashroom.png', { tilew: 483, tileh: 480 });
+    Q.sheet('fireball', '/images/mario_fireball.gif', { tilew: 20, tileh: 20 });
+    Q.sheet('bossfire', '/images/boss_fireball.gif', { tilew: 48, tileh: 16 });
+    Q.sheet('coin', '/images/coin.png', { tilew: 32, tileh: 32 });
+    Q.stageScene('level1');
   });
 });

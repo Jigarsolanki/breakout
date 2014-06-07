@@ -31,7 +31,6 @@ require([], function () {
         }
     },
     step: function (dt) {
-      // // this.p.angle = this.p.x % 360;
       this.p.y = this.p.originalY - 5 ;
       this.p.distance += 1;
 

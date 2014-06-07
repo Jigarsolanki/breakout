@@ -5,7 +5,8 @@ require(['./src/fireball'], function (Fireball) {
         sheet: 'player',
         sprite: 'player',
         flip: 'x',
-        canFire: false
+        canFire: false,
+        health: 100
       });
 
       this.add('2d, platformerControls, animation');
@@ -16,13 +17,27 @@ require(['./src/fireball'], function (Fireball) {
         if (collision.obj.isA('Princess')) {
           Q.stageScene('endGame', 1, { label: 'You Won!' });
           this.destroy();
+          Q.audio.play('/sounds/world_clear.wav');
         }
 
         if (collision.obj.isA('Mashroom')){
-          this.p.scale = 1.5;
+          // this.p.scale = 1.5;
           this.p.canFire = true;
+          Q.audio.play('/sounds/powerup.wav');
         }
       });
+
+      this.on('damage', 'onDemage');
+    },
+    onDemage: function () {
+      this.p.health -= 100;
+
+      if (this.p.health > 0) {
+        return;
+      }
+      Q.audio.play('/sounds/mario_die.wav');
+      Q.stageScene("endGame",1, { label: "You Died" });
+      this.destroy();
     },
     fireWeapon: function () {
       if (!this.p.canFire) {
@@ -30,9 +45,9 @@ require(['./src/fireball'], function (Fireball) {
       }
 
       if (this.p.direction === 'left') {
-        this.stage.insert(new Q.Fireball({ x: this.p.x - 30, y: this.p.y, vx: -250 }));
+        this.stage.insert(new Q.Fireball({ x: this.p.x - 15, y: this.p.y, vx: -250 }));
       } else {
-        this.stage.insert(new Q.Fireball({ x: this.p.x + 30, y: this.p.y, vx: 250 }));
+        this.stage.insert(new Q.Fireball({ x: this.p.x + 15, y: this.p.y, vx: 250 }));
       }
 
       Q.audio.play('/sounds/fireball.wav');
