@@ -36,20 +36,21 @@ require(['./src/player', './src/goomba', './src/boss', './src/mashroom', './src/
 
     stage.add('viewport');
 
-    // stage.insert(new Q.Goomba({ x: 50, y: 0 }));
-    // stage.insert(new Q.Goomba({ x: 80, y: 0 }));
-    // stage.insert(new Q.Goomba({ x: 75, y: 0 }));
-    // stage.insert(new Q.Boss({ x: 150, y: 70 }));
+    stage.insert(new Q.Goomba({ x: 350, y: 0 }));
+    stage.insert(new Q.Goomba({ x: 550, y: 0 }));
+    stage.insert(new Q.Goomba({ x: 750, y: 450 }));
 
-    // stage.insert(new Q.Princess({ x: 40, y: 0 }));
+    stage.insert(new Q.Boss({ x: 250, y: 70 }));
+
+    stage.insert(new Q.Princess({ x: 40, y: 0 }));
 
     stage.insert(new Q.Coin({ x: 300, y: 505 }));
     stage.insert(new Q.Coin({ x: 330, y: 505 }));
     stage.insert(new Q.Coin({ x: 360, y: 505 }));
-    stage.insert(new Q.Coin({ x: 160, y: 190 }));
-    stage.insert(new Q.Coin({ x: 190, y: 190 }));
-    stage.insert(new Q.Coin({ x: 220, y: 190 }));
-    stage.insert(new Q.Coin({ x: 250, y: 190 }));
+    // stage.insert(new Q.Coin({ x: 160, y: 190 }));
+    // stage.insert(new Q.Coin({ x: 190, y: 190 }));
+    // stage.insert(new Q.Coin({ x: 220, y: 190 }));
+    // stage.insert(new Q.Coin({ x: 250, y: 190 }));
 
     stage.insert(new Q.Mashroom({ x: 495, y: 250 }))
   });

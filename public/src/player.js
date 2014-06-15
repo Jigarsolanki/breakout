@@ -21,7 +21,6 @@ require(['./src/fireball'], function (Fireball) {
         }
 
         if (collision.obj.isA('Mashroom')){
-          // this.p.scale = 1.5;
           this.p.canFire = true;
           Q.audio.play('/sounds/powerup.wav');
         }
