@@ -16,20 +16,30 @@ var total_score = 0;
 var ball_speed = 1500; // Max is 1500
 var ball_size = 4; // Max is 45
 
-var paddle_speed = 20; // Max is 30
+var paddle_speed = 10; // Max is 30
 var paddle_size = 40; // Max is 40
+
+
 var your_name = 'The Great One!'; //Your Name
 
 
 /***********************************
  * 2) Changin the level
+ *  ------------------------------
+ * | No | Color         | Points  |
+ *  ------------------------------
+ * | 1  | Green         | 10      |
+ * | 2  | Orange        | 20      |
+ * | 1  | Blue          | 30      |
+ * | 2  | Purple        | 40      |
+ *  ------------------------------
  **********************************/
 var brick_level = [
-  [1,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,1,1,1,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,1,1,0,0,0,0],
+  [0,0,0,2,0,0,0,2,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
@@ -43,8 +53,8 @@ function playSound(soundFilePath) {
 
 if (ball_speed > 1500 ) { ball_speed = 1500 };
 if (ball_size > 45 ) { ball_size = 45 };
-if (paddle_size > 40) { paddle_size  = 40; }
 if (paddle_speed > 30) { paddle_speed = 30; }
+if (paddle_size > 40) { paddle_size  = 40; }
 
 Q.Sprite.extend('Brick', {
   init: function(p) {
@@ -57,6 +67,7 @@ Q.Sprite.extend('Brick', {
     this.add('2d, aiBounce');
     this.on("bump.bottom, bump.top, bump.left, bump.right", function (collision) {
       this.destroy();
+
       Q.stageScene('brickDestroyed', 1, { score: this.p.value });
     });
   }
@@ -110,12 +121,16 @@ Q.Sprite.extend("Ball", {
       },p);
 
       this.add("animation");
-
       this.on("inserted");
       this.on("hit",this,"collide");
 
     },
     collide: function(col) {
+      /**********************************
+       * 3) Call function here to add sound to ball collision
+       **********************************/
+
+
       if(col.obj.isA("Paddle")) {
         var dx = (this.p.x - col.obj.p.x) / col.obj.p.w * 2.5;
 
@@ -181,7 +196,6 @@ Q.scene('level1',function(stage) {
             value: (10 * brick_level[br][i])
           })
         );
-
       }
     }
   }
