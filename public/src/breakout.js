@@ -4,7 +4,6 @@ var Q = Quintus({audioSupported: [ 'wav','mp3' ]})
   .enableSound()
   .controls().touch();
 
-var number_of_bricks = 0;
 var total_score = 0;
 
 /***********************************
@@ -24,10 +23,10 @@ var your_name = 'The Great One!';
 var brick_level = [
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,1,1,1,0,0,0,0],
-  [0,0,0,0,0,3,0,0,0,0,0],
-  [0,0,0,2,0,3,0,2,0,0,0],
-  [0,0,0,0,0,4,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,2,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
@@ -48,10 +47,9 @@ Q.Sprite.extend('Brick', {
     });
     this.add('2d, aiBounce');
     this.on("bump.bottom, bump.top, bump.left, bump.right", function (collision) {
-      Q.stageScene('brickDestroyed', 1, { score: this.p.value });
       this.destroy();
+      Q.stageScene('brickDestroyed', 1, { score: this.p.value });
     });
-    number_of_bricks += 1;
   }
 });
 
@@ -80,7 +78,6 @@ Q.Sprite.extend('Paddle', {
   },
   step: function (dt) {
     this.p.vx *= paddle_speed;
-    console.log(this.p.x, this.p.vx);
   }
 });
 
@@ -121,14 +118,13 @@ Q.Sprite.extend('Ball', {
     });
   },
   step: function () {
-    if (number_of_bricks <= 0) {
+    if (Q('Brick').length === 0) {
       this.destroy();
     }
   }
 });
 
 Q.scene('level1',function(stage) {
-  number_of_bricks = 0;
   total_score = 0;
 
   stage.collisionLayer(new Q.TileLayer({ dataAsset: '/breakout_stage.json', sheet: 'tiles' }));
@@ -152,11 +148,12 @@ Q.scene('level1',function(stage) {
   }
 
   stage.insert(new Q.Paddle({ x: 400, y: 760 }));
+  Q.stageScene('hud', 3);
 });
 
 Q.scene('hud',function(stage) {
   var container = stage.insert(new Q.UI.Container({
-    x: 50, y: 0
+    x: 40, y: -5
   }));
 
   var label = container.insert(new Q.UI.Text({
@@ -170,12 +167,10 @@ Q.scene('hud',function(stage) {
 });
 
 Q.scene('brickDestroyed',function(stage) {
-  number_of_bricks -= 1;
-
   total_score += stage.options.score;
   Q.stageScene('hud', 3);
 
-  if(number_of_bricks <= 0) {
+  if(Q('Brick').length <= 1) {
     Q.stageScene('endGame', 1, { label: 'You won, ' + your_name + '!' });
   }
 });
