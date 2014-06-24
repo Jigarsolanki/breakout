@@ -13,19 +13,19 @@ var total_score = 0;
 /***********************************
  * 1) Adjusting the game
  **********************************/
-var ball_speed = 1500;
-var ball_size = 2;
+var ball_speed = 1500; // Max is 1500
+var ball_size = 4; // Max is 45
 
-var paddle_speed = 9; //
-var paddle_size = 40; //40 is Max
-var your_name = 'The Great One!';
+var paddle_speed = 20; // Max is 30
+var paddle_size = 40; // Max is 40
+var your_name = 'The Great One!'; //Your Name
 
 
 /***********************************
  * 2) Changin the level
  **********************************/
 var brick_level = [
-  [0,0,0,0,0,0,0,0,0,0,0],
+  [1,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
@@ -40,6 +40,11 @@ var brick_level = [
 function playSound(soundFilePath) {
   Q.audio.play('/sounds/' + soundFilePath);
 };
+
+if (ball_speed > 1500 ) { ball_speed = 1500 };
+if (ball_size > 45 ) { ball_size = 45 };
+if (paddle_size > 40) { paddle_size  = 40; }
+if (paddle_speed > 30) { paddle_speed = 30; }
 
 Q.Sprite.extend('Brick', {
   init: function(p) {
@@ -63,9 +68,10 @@ Q.Sprite.extend('Paddle', {
       sheet: 'paddle',
       gravity: 0,
       scale: 0.5,
-      started: false
+      started: false,
+      initialY: p.y
     });
-    this.add('2d, aiBounce, platformerControls');
+    this.add('2d, animation, platformerControls');
     Q.input.on('fire', this, 'fireBall');
   },
   fireBall: function () {
@@ -82,6 +88,7 @@ Q.Sprite.extend('Paddle', {
   },
   step: function (dt) {
     this.p.vx *= paddle_speed;
+    this.p.y = this.p.initialY;
 
     if (this.p.started && Q('Ball').length <= 0 && Q('Brick').length != 0) {
       this.destroy();
@@ -155,7 +162,6 @@ Q.Sprite.extend("Ball", {
       }
     }
 });
-
 
 Q.scene('level1',function(stage) {
   total_score = 0;
