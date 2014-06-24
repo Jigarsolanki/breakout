@@ -4,16 +4,20 @@ var Q = Quintus({audioSupported: [ 'wav','mp3' ]})
   .enableSound()
   .controls().touch();
 
+Q.gravityY = 0;
+Q.gravityX = 0;
+
+
 var total_score = 0;
 
 /***********************************
  * 1) Adjusting the game
  **********************************/
-var ball_speed = 5;
+var ball_speed = 1500;
 var ball_size = 2;
 
-var paddle_speed = 5;
-var paddle_size = 5;
+var paddle_speed = 9; //
+var paddle_size = 40; //40 is Max
 var your_name = 'The Great One!';
 
 
@@ -25,7 +29,7 @@ var brick_level = [
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,2,0,0,0],
+  [0,0,0,0,0,1,1,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0],
@@ -69,7 +73,7 @@ Q.Sprite.extend('Paddle', {
       return;
     }
 
-    this.stage.insert(new Q.Ball({ x: this.p.x, y: this.p.y - 100 }));
+    this.stage.insert(new Q.Ball({ x: this.p.x, y: this.p.y - 10 }));
     this.p.started = true;
 
     this.on('hit.sprite', function (collision) {
@@ -78,51 +82,80 @@ Q.Sprite.extend('Paddle', {
   },
   step: function (dt) {
     this.p.vx *= paddle_speed;
-  }
-});
 
-Q.Sprite.extend('Ball', {
-  init: function(p) {
-    this._super(p, {
-      sheet: 'ball',
-      gravity: 0,
-      vx: 50 * ball_speed,
-      vy: -100 * ball_speed,
-      scale: 0.1 * ball_size
-    });
-
-    this.add('2d, aiBounce');
-
-    this.on("bump.bottom", function (collision) {
-      this.p.vy = -100 * ball_speed;
-
-      if (collision.obj.isA('TileLayer')) {
-        this.destroy();
-        Q.stageScene('endGame', 1, { label: 'You lost, ' + your_name + '!' });
-      } else if (collision.obj.isA('Paddle')) {
-        if ((collision.obj.p.vx > 0 && this.p.vx < 0) || (collision.obj.p.vx < 0 && this.p.vx > 0)) {
-          this.p.vx = -1 * this.p.vx;
-        }
-      }
-    });
-
-    this.on("bump.top", function (collision) {
-      this.p.vy = 100 * ball_speed;
-    });
-
-    this.on('bump.bottom, bump.top, bump.left, bump.right', function () {
-      /***********************************
-       * 3) Add sound code here
-       **********************************/
-
-    });
-  },
-  step: function () {
-    if (Q('Brick').length === 0) {
+    if (this.p.started && Q('Ball').length <= 0 && Q('Brick').length != 0) {
       this.destroy();
+      Q.stageScene('endGame', 1, { label: 'You lost, ' + your_name + '!' });
     }
   }
 });
+
+Q.Sprite.extend("Ball", {
+    init: function(p) {
+      this._super({
+        sheet:"ball",
+        sprite: "ball",
+        speed: ball_speed,
+        collisionMask: Q.SPRITE_DEFAULT,
+        vx: 0,
+        vy: 0,
+        scale: 0.1 * ball_size
+      },p);
+
+      this.add("animation");
+
+      this.on("inserted");
+      this.on("hit",this,"collide");
+
+    },
+    collide: function(col) {
+      if(col.obj.isA("Paddle")) {
+        var dx = (this.p.x - col.obj.p.x) / col.obj.p.w * 2.5;
+
+        if(col.normalY <= 0) {
+          this.p.vy = -this.p.speed;
+        }
+        this.p.vx = dx * this.p.speed;
+      } else {
+        if(col.normalY < -0.3) {
+            this.p.vy = -Math.abs(this.p.vy);
+        }
+        if(col.normalY > 0.3) {
+            this.p.vy = Math.abs(this.p.vy);
+        }
+
+        if(col.normalX < -0.3) {
+            this.p.vx = -Math.abs(this.p.vx);
+        }
+        if(col.normalX > 0.3) {
+            this.p.vx = Math.abs(this.p.vx);
+        }
+      }
+
+      this.p.x -= col.separate[0];
+      this.p.y -= col.separate[1];
+    },
+    inserted:function() {
+      this.p.vy = this.p.speed;
+      this.p.vx = this.p.speed;
+    },
+    step: function(dt) {
+      this.p.x += this.p.vx * dt;
+      this.p.y += this.p.vy * dt;
+
+      this.stage.collide(this);
+
+      if(this.p.x < 24) { this.p.vx = Math.abs(this.p.vx); }
+      if(this.p.x > Q.width - 24) { this.p.vx = -Math.abs(this.p.vx); }
+
+      if(this.p.y < 24) { this.p.vy = Math.abs(this.p.vy); }
+
+      if(this.p.y > Q.height || Q('Brick').length <= 0) {
+        this.destroy(); // Remove the ball if it's off the screen
+      }
+    }
+});
+
 
 Q.scene('level1',function(stage) {
   total_score = 0;
@@ -147,7 +180,7 @@ Q.scene('level1',function(stage) {
     }
   }
 
-  stage.insert(new Q.Paddle({ x: 400, y: 760 }));
+  stage.insert(new Q.Paddle({ x: 400, y: 750 }));
   Q.stageScene('hud', 3);
 });
 
