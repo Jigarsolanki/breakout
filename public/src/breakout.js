@@ -11,10 +11,11 @@ var total_score = 0;
  * 1) Adjusting the game
  **********************************/
 var ball_speed = 5;
-var ball_size = 7;
+var ball_size = 2;
+
 var paddle_speed = 5;
-var paddle_size = 20;
-var your_name = 'Jigar';
+var paddle_size = 5;
+var your_name = 'The Great One!';
 
 
 /***********************************
@@ -102,12 +103,7 @@ Q.Sprite.extend('Ball', {
         this.destroy();
         Q.stageScene('endGame', 1, { label: 'You lost, ' + your_name + '!' });
       } else if (collision.obj.isA('Paddle')) {
-        if (
-          (collision.obj.p.vx > 0 && this.p.vx < 0)
-          ||
-          (collision.obj.p.vx < 0 && this.p.vx > 0)
-          ) {
-          debugger;
+        if ((collision.obj.p.vx > 0 && this.p.vx < 0) || (collision.obj.p.vx < 0 && this.p.vx > 0)) {
           this.p.vx = -1 * this.p.vx;
         }
       }
@@ -121,7 +117,7 @@ Q.Sprite.extend('Ball', {
       /***********************************
        * 3) Add sound code here
        **********************************/
-      playSound('collision.wav');
+
     });
   },
   step: function () {
@@ -155,7 +151,7 @@ Q.scene('level1',function(stage) {
     }
   }
 
-  stage.insert(new Q.Paddle({ x: 400, y: 800 }));
+  stage.insert(new Q.Paddle({ x: 400, y: 760 }));
 });
 
 Q.scene('hud',function(stage) {
