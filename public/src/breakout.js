@@ -13,14 +13,14 @@ var total_score = 0;
 /***********************************
  * 1) Adjusting the game
  **********************************/
-var ball_speed = 1500; // Max is 1500
+var ball_speed = 100; // Max is 1500
 var ball_size = 4; // Max is 45
 
 var paddle_speed = 10; // Max is 30
 var paddle_size = 5; // Max is 40
 
 
-var your_name = 'The Great One!'; //Your Name
+var your_name = 'The Great One!'; // Change this to your name
 
 
 /***********************************
