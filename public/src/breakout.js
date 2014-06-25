@@ -7,7 +7,6 @@ var Q = Quintus({audioSupported: [ 'wav','mp3' ]})
 Q.gravityY = 0;
 Q.gravityX = 0;
 
-
 var total_score = 0;
 
 /***********************************
@@ -200,7 +199,7 @@ Q.scene('level1',function(stage) {
     }
   }
 
-  stage.insert(new Q.Paddle({ x: 400, y: 750 }));
+  stage.insert(new Q.Paddle({ x: 400, y: 590 }));
   Q.stageScene('hud', 3);
 });
 
