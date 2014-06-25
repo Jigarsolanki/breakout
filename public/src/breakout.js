@@ -29,8 +29,8 @@ var your_name = 'The Great One!'; // Change this to your name
  *  ------------------------------
  * | 1  | Green         | 10      |
  * | 2  | Orange        | 20      |
- * | 1  | Blue          | 30      |
- * | 2  | Purple        | 40      |
+ * | 3  | Blue          | 30      |
+ * | 4  | Purple        | 40      |
  *  ------------------------------
  **********************************/
 var brick_level = [
@@ -253,7 +253,8 @@ files = [
   '/images/brick_4.png',
   '/images/ball.png',
   '/images/paddle.png',
-  '/sounds/collision.wav'
+  '/sounds/collision.wav',
+  '/sounds/collision_1.wav'
 ];
 
 Q.load(files.join(',') , function() {
