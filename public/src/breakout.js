@@ -186,7 +186,7 @@ Q.scene('level1',function(stage) {
   for (var br = 0; br < brick_level.length; br++) {
     var row = brick_level[br];
     for (var i = 0; i < row.length; i++) {
-      if (brick_level[br][i] != 0 ) {
+      if (brick_level[br][i] != 0 && brick_level[br][i] <=4) {
         stage.insert(
           new Q.Brick({
             x: (3 + ((i + 1) * 66)),
