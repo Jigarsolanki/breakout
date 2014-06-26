@@ -1,4 +1,4 @@
-Mario
+Breakout
 ==============
 
-A Simple Mario game in Quintus
+A simple breakout game in Quintus
