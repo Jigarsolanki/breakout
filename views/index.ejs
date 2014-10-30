@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <script src="/lib/require.min.js"></script>
+    <script src="lib/quintus-all.js"></script>
+
+    <script>
+      var BREAKOUT_BALL_SPEED = <%= breakout_ball_speed %>;
+      var BREAKOUT_BALL_SIZE = <%= breakout_ball_size %>;
+      var BREAKOUT_PADDLE_SPEED = <%= breakout_paddle_speed %>;
+      var BREAKOUT_PADDLE_SIZE = <%= breakout_paddle_size %>;
+
+      require(["src/breakout"]);
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

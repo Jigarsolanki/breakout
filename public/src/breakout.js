@@ -8,15 +8,17 @@ Q.gravityY = 0;
 Q.gravityX = 0;
 
 var total_score = 0;
+var ball_speed, ball_size, paddle_speed, paddle_size;
 
 /***********************************
  * 1) Adjusting the game
  **********************************/
-var ball_speed = 100; // Max is 1500
-var ball_size = 4; // Max is 45
 
-var paddle_speed = 10; // Max is 30
-var paddle_size = 5; // Max is 40
+var ball_speed =  BREAKOUT_BALL_SPEED || 100 ; // Max is 1500
+var ball_size = BREAKOUT_BALL_SIZE || 4; // Max is 45
+
+var paddle_speed = BREAKOUT_PADDLE_SPEED || 10; // Max is 30
+var paddle_size = BREAKOUT_PADDLE_SIZE || 5; // Max is 40
 
 
 var your_name = 'The Great One!'; // Change this to your name
