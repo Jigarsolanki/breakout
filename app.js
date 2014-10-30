@@ -7,4 +7,6 @@ app.get('/', function(req, res){
   res.render('index.html');
 });
 
+
+console.log('app running on port 3000');
 app.listen(3000);
