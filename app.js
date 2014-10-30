@@ -1,7 +1,11 @@
 var express = require('express');
 var app = express();
-var config = require('./config')
+var config = require('./config');
+var fs = require('fs');
 
+if (fs.existsSync('./local-config.js')) {
+  config = require('./local-config.js');
+}
 
 app.set('view engine', 'ejs');
 
